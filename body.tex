@@ -1,0 +1,48 @@
+
+\section{Introduction}
+
+This note is a summary of work done for the Long Haul Network to USDF teats done on \jira{PREOPS-3571}.
+This work was carried out in October 2023 - there may be more tests later.
+
+\section {Test Setup}
+
+To simulate as closely as possible the camera setup up eight of the camera nodes on the summit
+were used to transmit data.
+
+\subsection{Data}
+Each node had some full focal plane image data on the local disk.
+The chosen images were the pinhole images taken in 2020 since they have high information content and compress less than say flats from TS8.
+The following  were provided by Tony Johnson :\\
+\begin{tabular}{l l}
+Romanesco  & MC\_C\_20200822\_000075\\
+Vera\_Rubin & MC\_C\_20200822\_000054\\
+Flammarion & MC\_C\_20200822\_000082\\
+Group\_Photo & MC\_C\_20200822\_000061\\
+\end{tabular}
+
+These images may also be found in {\tt LSSTCam}  butler repo on USDF  using:
+\begin{verbatim}
+  exposure.obs_id IN ('MC_C_20200822_000075', 'MC_C_20200822_000054', 'MC_C_20200822_000082', 'MC_C_20200822_000061')}
+\end{verbatim}
+
+\subsection{Sending  and Scripts}
+
+All scripts may be found in \url{https://github.com/lsst-dm/s3daemon}
+
+A pooled connection S3 writer called {\tt s3daemon} was provided for K.T. Lim.
+This was run on the background on each node.
+
+The test client  {\tt send.py} can send one file and store it in S3 at the USDF with the given key.
+
+The test scripts are einteh summittests folder of the s3daemon repo.
+All scripts rely on a set of environment variables set in {\tt envvars.sh} this is not checked in but {\tt envvars_template.sh} gives the variables minus the actual S3 keys.
+
+{\tt runs3Daemon.sh} runs the daemon and sets up a log file using the hostname.
+ {\tt runOnNodes.sh .\runs3daemon.sh} is used to run that on all 8 nodes .
+
+The {\tt sendTest.sh} uses {\tt send.py} to send 20 file simultaneously from the Test folder set up by Tony.
+ {\tt runOnNodes.sh .\sendTest.sh} is used to run that ton all 8 nodes simultaneously.
+
+
+
+
