@@ -20,8 +20,11 @@ Flammarion & MC\_C\_20200822\_000082\\
 Group\_Photo & MC\_C\_20200822\_000061\\
 \end{tabular}
 
+The images are compressed but not in the way we are doing them now (gzip vs. Rice tile).  Same file would go from 25MB to 20MB, so this test is extra-conservative.
+
 These images may also be found in {\tt LSSTCam}  butler repo on USDF  using:
 \begin{verbatim}
+  where
   exposure.obs_id IN ('MC_C_20200822_000075', 'MC_C_20200822_000054',
                       'MC_C_20200822_000082', 'MC_C_20200822_000061')}
 \end{verbatim}
@@ -70,9 +73,12 @@ The sendTest was then executed on each node with 20 repeats:
 \begin{verbatim}
 ./runOnNodes.sh ./sendTest.sh 20
 \end{verbatim}
-There are only 64 files on node 10 not 108 as on the other nodes hence {\tt ./sendTest 14} was
+There are only 64 files on node 10 not 108 as on the other nodes.
+Since the script simply repeats sending all files a number of times this resulted in significantly less files from node 10.
+In the next iteration this will be made total number of sends rather than repeat all.
+Hence {\tt ./sendTest 14} was
 additionally run on that node to get he same number of files sent and a few lines removed from the log.
-This was run after the end of the test so the times are better on that node.
+This was run after the end of the test so the times are better on that node which should be taken a a single node test..
 
 The log files were all pulled back to {\tt lsstcam-dc1} :
 \begin{verbatim}
