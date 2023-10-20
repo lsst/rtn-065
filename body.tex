@@ -24,10 +24,19 @@ The images are compressed but not in the way we are doing them now (gzip vs. Ric
 
 These images may also be found in {\tt LSSTCam}  butler repo on USDF  using:
 \begin{verbatim}
-  where
-  exposure.obs_id IN ('MC_C_20200822_000075', 'MC_C_20200822_000054',
-                      'MC_C_20200822_000082', 'MC_C_20200822_000061')}
+  repo = 'LSSTCam'
+  instrument = 'LSSTCam'
+  collections=[f"{instrument}/raw/all"]
+  butler = Butler(repo, collections=collections, instrument=instrument)
+
+  where="exposure.obs_id IN ('MC_C_20200822_000075', 'MC_C_20200822_000054',
+                             'MC_C_20200822_000082', 'MC_C_20200822_000061')}"
+
+  datasetRefs = list(butler.registry.queryDatasets(datasetType='raw',where=where))
+
 \end{verbatim}
+
+There are 820 raw's in the collection.
 
 \subsection{Sending  and Scripts} \label{sec:setup}
 
