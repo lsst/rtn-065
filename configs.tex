@@ -1,0 +1,66 @@
+
+\section{Configs of various parts of the system}
+
+\subsection{Summit Nodes} \label{sec:summitnodes}
+
+KT suggested changing some network settings which seem to give a good boast to the variance on send times.
+It is noted that doing this on all nodes has caused problems on Google.
+
+These are the default settings on lsstcam-dc01.
+\begin{verbatim}
+ sysctl net.core.rmem_max net.core.wmem_max net.ipv4.ip_no_pmtu_disc net.ipv4.tcp_adv_win_scale net.ipv4.tcp_congestion_control net.ipv4.tcp_rmem net.ipv4.tcp_wmem net.ipv4.tcp_slow_start_after_idle
+net.core.rmem_max = 18874368
+net.core.wmem_max = 18874368
+net.ipv4.ip_no_pmtu_disc = 0
+net.ipv4.tcp_adv_win_scale = 1
+net.ipv4.tcp_congestion_control = cubic
+net.ipv4.tcp_rmem = 4096	131072	6291456
+net.ipv4.tcp_wmem = 4096	16384	4194304
+net.ipv4.tcp_slow_start_after_idle = 1
+
+\end{verbatim}
+
+
+We tried:
+\begin{verbatim}
+sudo sysctl -w net.core.rmem_max=536870912 net.core.wmem_max=536870912 net.ipv4.tcp_slow_start_after_idle=1 net.ipv4.tcp_rmem="4096 87380 536870912" net.ipv4.tcp_wmem="4096 87380 536870912"
+[sudo] password for womullan:
+net.core.rmem_max = 536870912
+net.core.wmem_max = 536870912
+net.ipv4.tcp_slow_start_after_idle = 1
+net.ipv4.tcp_rmem = 4096 87380 536870912
+net.ipv4.tcp_wmem = 4096 87380 536870912
+\end{verbatim}
+
+
+Then sent 20 files
+\begin{verbatim}
+INFO 2023-10-20 18:19:21,267 __main__ - 1697825955.742556 5.525297 sec
+INFO 2023-10-20 18:19:21,284 __main__ - 1697825955.859672 5.425099 sec
+INFO 2023-10-20 18:19:21,552 __main__ - 1697825956.016143 5.536437 sec
+INFO 2023-10-20 18:19:21,781 __main__ - 1697825956.389913 5.391552 sec
+INFO 2023-10-20 18:19:21,790 __main__ - 1697825956.298219 5.492611 sec
+INFO 2023-10-20 18:19:21,974 __main__ - 1697825956.250498 5.723709 sec
+INFO 2023-10-20 18:19:22,141 __main__ - 1697825955.970565 6.170951 sec
+INFO 2023-10-20 18:19:22,202 __main__ - 1697825956.628347 5.574002 sec
+INFO 2023-10-20 18:19:22,275 __main__ - 1697825956.155515 6.119936 sec
+INFO 2023-10-20 18:19:22,326 __main__ - 1697825956.107185 6.218835 sec
+INFO 2023-10-20 18:19:22,340 __main__ - 1697825955.926072 6.414600 sec
+INFO 2023-10-20 18:19:22,341 __main__ - 1697825956.344095 5.996950 sec
+INFO 2023-10-20 18:19:22,379 __main__ - 1697825956.484829 5.894819 sec
+INFO 2023-10-20 18:19:22,397 __main__ - 1697825956.203851 6.193639 sec
+INFO 2023-10-20 18:19:22,405 __main__ - 1697825956.534015 5.871541 sec
+INFO 2023-10-20 18:19:22,414 __main__ - 1697825956.060670 6.354022 sec
+INFO 2023-10-20 18:19:22,516 __main__ - 1697825956.581504 5.934656 sec
+INFO 2023-10-20 18:19:22,666 __main__ - 1697825955.882403 6.784219 sec
+INFO 2023-10-20 18:19:23,166 __main__ - 1697825955.790350 7.376098 sec
+INFO 2023-10-20 18:19:23,402 __main__ - 1697825956.435606 6.967129 sec
+\end{verbatim}
+
+Coming back to run the sendTest again 15 minutes  later gives results with more variance up to 16s again.
+Some settings had reverted - may be puppet does this.
+\begin{verbatim}
+net.core.rmem_max = 18874368
+net.core.wmem_max = 18874368
+\end{verbatim}
+
